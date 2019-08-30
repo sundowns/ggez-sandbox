@@ -25,14 +25,16 @@ struct DumbGame {
   dt: std::time::Duration,
   // font: graphics::Font,
   text: graphics::Text,
+  screen_dimensions: (f32, f32),
 }
 
 impl DumbGame {
-  pub fn new(_ctx: &mut Context) -> DumbGame {
+  pub fn new(ctx: &mut Context) -> DumbGame {
     // Load/create resources here: images, fonts, sounds, etc.
     DumbGame {
       dt: std::time::Duration::new(0, 0),
       text: graphics::Text::new(format!("dt: {}", 0)),
+      screen_dimensions: graphics::drawable_size(ctx),
     }
   }
 }
@@ -48,7 +50,10 @@ impl event::EventHandler for DumbGame {
   fn draw(&mut self, ctx: &mut Context) -> GameResult<()> {
     graphics::clear(ctx, graphics::BLACK);
 
-    let my_dest = nalgebra::Point2::new(13.0, 37.0);
+    let my_dest = nalgebra::Point2::new(
+      (self.screen_dimensions.0 / 2.0) - (self.text.width(ctx)/2) as f32,
+      (self.screen_dimensions.1 / 2.0) - (self.text.height(ctx)/2) as f32,
+    );
     graphics::draw(
       ctx,
       &self.text,
